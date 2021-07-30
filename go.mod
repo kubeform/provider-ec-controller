@@ -3,7 +3,7 @@ module kubeform.dev/provider-ec-controller
 go 1.16
 
 require (
-	github.com/equinix/terraform-provider-metal v1.1.1-0.20210727130052-a55db9bd1897
+	github.com/elastic/terraform-provider-ec v0.2.1
 	github.com/fatih/structs v1.1.0
 	github.com/go-logr/logr v0.4.0
 	github.com/gobuffalo/flect v0.2.3
@@ -26,7 +26,7 @@ require (
 	k8s.io/klog/v2 v2.8.0
 	kmodules.xyz/client-go v0.0.0-20210617233340-13d22e91512b
 	kubeform.dev/apimachinery v0.0.0-20210629153539-7bcd34a30eb5
-	kubeform.dev/provider-ec-api v0.2.0
+	kubeform.dev/provider-ec-api v0.0.0-20210729231902-82bd27f1a463
 	sigs.k8s.io/cli-utils v0.25.0
 	sigs.k8s.io/controller-runtime v0.9.0
 )
@@ -72,26 +72,6 @@ replace github.com/Azure/go-autorest/tracing => github.com/Azure/go-autorest/tra
 replace github.com/docker/distribution => github.com/docker/distribution v0.0.0-20191216044856-a8371794149d
 
 replace github.com/docker/docker => github.com/moby/moby v17.12.0-ce-rc1.0.20200618181300-9dc6525e6118+incompatible
-
-replace github.com/go-openapi/analysis => github.com/go-openapi/analysis v0.19.5
-
-replace github.com/go-openapi/errors => github.com/go-openapi/errors v0.19.2
-
-replace github.com/go-openapi/jsonpointer => github.com/go-openapi/jsonpointer v0.19.3
-
-replace github.com/go-openapi/jsonreference => github.com/go-openapi/jsonreference v0.19.3
-
-replace github.com/go-openapi/loads => github.com/go-openapi/loads v0.19.4
-
-replace github.com/go-openapi/runtime => github.com/go-openapi/runtime v0.19.4
-
-replace github.com/go-openapi/spec => github.com/go-openapi/spec v0.19.5
-
-replace github.com/go-openapi/strfmt => github.com/go-openapi/strfmt v0.19.5
-
-replace github.com/go-openapi/swag => github.com/go-openapi/swag v0.19.5
-
-replace github.com/go-openapi/validate => github.com/gomodules/validate v0.19.8-1.16
 
 replace github.com/gogo/protobuf => github.com/gogo/protobuf v1.3.2
 
