@@ -27,8 +27,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gobuffalo/flect"
 	ec "github.com/elastic/terraform-provider-ec/ec"
+	"github.com/gobuffalo/flect"
 	auditlib "go.bytebuilders.dev/audit/lib"
 	arv1 "k8s.io/api/admissionregistration/v1"
 	"k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
@@ -39,32 +39,8 @@ import (
 	admissionregistrationv1 "k8s.io/client-go/kubernetes/typed/admissionregistration/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog/v2"
-	domainv1alpha1 "kubeform.dev/provider-ec-api/apis/domain/v1alpha1"
-	firewallv1alpha1 "kubeform.dev/provider-ec-api/apis/firewall/v1alpha1"
-	imagev1alpha1 "kubeform.dev/provider-ec-api/apis/image/v1alpha1"
-	instancev1alpha1 "kubeform.dev/provider-ec-api/apis/instance/v1alpha1"
-	lkev1alpha1 "kubeform.dev/provider-ec-api/apis/lke/v1alpha1"
-	nodebalancerv1alpha1 "kubeform.dev/provider-ec-api/apis/nodebalancer/v1alpha1"
-	objectv1alpha1 "kubeform.dev/provider-ec-api/apis/object/v1alpha1"
-	rdnsv1alpha1 "kubeform.dev/provider-ec-api/apis/rdns/v1alpha1"
-	sshkeyv1alpha1 "kubeform.dev/provider-ec-api/apis/sshkey/v1alpha1"
-	stackscriptv1alpha1 "kubeform.dev/provider-ec-api/apis/stackscript/v1alpha1"
-	tokenv1alpha1 "kubeform.dev/provider-ec-api/apis/token/v1alpha1"
-	userv1alpha1 "kubeform.dev/provider-ec-api/apis/user/v1alpha1"
-	volumev1alpha1 "kubeform.dev/provider-ec-api/apis/volume/v1alpha1"
-	controllersdomain "kubeform.dev/provider-ec-controller/controllers/domain"
-	controllersfirewall "kubeform.dev/provider-ec-controller/controllers/firewall"
-	controllersimage "kubeform.dev/provider-ec-controller/controllers/image"
-	controllersinstance "kubeform.dev/provider-ec-controller/controllers/instance"
-	controllerslke "kubeform.dev/provider-ec-controller/controllers/lke"
-	controllersnodebalancer "kubeform.dev/provider-ec-controller/controllers/nodebalancer"
-	controllersobject "kubeform.dev/provider-ec-controller/controllers/object"
-	controllersrdns "kubeform.dev/provider-ec-controller/controllers/rdns"
-	controllerssshkey "kubeform.dev/provider-ec-controller/controllers/sshkey"
-	controllersstackscript "kubeform.dev/provider-ec-controller/controllers/stackscript"
-	controllerstoken "kubeform.dev/provider-ec-controller/controllers/token"
-	controllersuser "kubeform.dev/provider-ec-controller/controllers/user"
-	controllersvolume "kubeform.dev/provider-ec-controller/controllers/volume"
+	deploymentv1alpha1 "kubeform.dev/provider-ec-api/apis/deployment/v1alpha1"
+	controllersdeployment "kubeform.dev/provider-ec-controller/controllers/deployment"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
@@ -249,345 +225,75 @@ func updateVWC(vwcClient *admissionregistrationv1.AdmissionregistrationV1Client,
 func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVersionKind, auditor *auditlib.EventPublisher, watchOnlyDefault bool) error {
 	switch gvk {
 	case schema.GroupVersionKind{
-		Group:   "domain.ec.kubeform.com",
+		Group:   "deployment.ec.kubeform.com",
 		Version: "v1alpha1",
-		Kind:    "Domain",
+		Kind:    "Deployment",
 	}:
-		if err := (&controllersdomain.DomainReconciler{
+		if err := (&controllersdeployment.DeploymentReconciler{
 			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Domain"),
+			Log:              ctrl.Log.WithName("controllers").WithName("Deployment"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
 			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_domain"],
-			TypeName:         "ec_domain",
+			Resource:         ec.Provider().ResourcesMap["ec_deployment"],
+			TypeName:         "ec_deployment",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Domain")
+			setupLog.Error(err, "unable to create controller", "controller", "Deployment")
 			return err
 		}
 	case schema.GroupVersionKind{
-		Group:   "domain.ec.kubeform.com",
+		Group:   "deployment.ec.kubeform.com",
 		Version: "v1alpha1",
-		Kind:    "Record",
+		Kind:    "Extension",
 	}:
-		if err := (&controllersdomain.RecordReconciler{
+		if err := (&controllersdeployment.ExtensionReconciler{
 			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Record"),
+			Log:              ctrl.Log.WithName("controllers").WithName("Extension"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
 			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_domain_record"],
-			TypeName:         "ec_domain_record",
+			Resource:         ec.Provider().ResourcesMap["ec_deployment_extension"],
+			TypeName:         "ec_deployment_extension",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Record")
+			setupLog.Error(err, "unable to create controller", "controller", "Extension")
 			return err
 		}
 	case schema.GroupVersionKind{
-		Group:   "firewall.ec.kubeform.com",
+		Group:   "deployment.ec.kubeform.com",
 		Version: "v1alpha1",
-		Kind:    "Firewall",
+		Kind:    "TrafficFilter",
 	}:
-		if err := (&controllersfirewall.FirewallReconciler{
+		if err := (&controllersdeployment.TrafficFilterReconciler{
 			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Firewall"),
+			Log:              ctrl.Log.WithName("controllers").WithName("TrafficFilter"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
 			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_firewall"],
-			TypeName:         "ec_firewall",
+			Resource:         ec.Provider().ResourcesMap["ec_deployment_traffic_filter"],
+			TypeName:         "ec_deployment_traffic_filter",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Firewall")
+			setupLog.Error(err, "unable to create controller", "controller", "TrafficFilter")
 			return err
 		}
 	case schema.GroupVersionKind{
-		Group:   "image.ec.kubeform.com",
+		Group:   "deployment.ec.kubeform.com",
 		Version: "v1alpha1",
-		Kind:    "Image",
+		Kind:    "TrafficFilterAssociation",
 	}:
-		if err := (&controllersimage.ImageReconciler{
+		if err := (&controllersdeployment.TrafficFilterAssociationReconciler{
 			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Image"),
+			Log:              ctrl.Log.WithName("controllers").WithName("TrafficFilterAssociation"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
 			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_image"],
-			TypeName:         "ec_image",
+			Resource:         ec.Provider().ResourcesMap["ec_deployment_traffic_filter_association"],
+			TypeName:         "ec_deployment_traffic_filter_association",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Image")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "instance.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Instance",
-	}:
-		if err := (&controllersinstance.InstanceReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Instance"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_instance"],
-			TypeName:         "ec_instance",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Instance")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "instance.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Ip",
-	}:
-		if err := (&controllersinstance.IpReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Ip"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_instance_ip"],
-			TypeName:         "ec_instance_ip",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Ip")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "lke.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Cluster",
-	}:
-		if err := (&controllerslke.ClusterReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Cluster"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_lke_cluster"],
-			TypeName:         "ec_lke_cluster",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Cluster")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "nodebalancer.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Nodebalancer",
-	}:
-		if err := (&controllersnodebalancer.NodebalancerReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Nodebalancer"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_nodebalancer"],
-			TypeName:         "ec_nodebalancer",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Nodebalancer")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "nodebalancer.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Config",
-	}:
-		if err := (&controllersnodebalancer.ConfigReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Config"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_nodebalancer_config"],
-			TypeName:         "ec_nodebalancer_config",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Config")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "nodebalancer.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Node",
-	}:
-		if err := (&controllersnodebalancer.NodeReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Node"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_nodebalancer_node"],
-			TypeName:         "ec_nodebalancer_node",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Node")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "object.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "StorageBucket",
-	}:
-		if err := (&controllersobject.StorageBucketReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("StorageBucket"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_object_storage_bucket"],
-			TypeName:         "ec_object_storage_bucket",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "StorageBucket")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "object.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "StorageKey",
-	}:
-		if err := (&controllersobject.StorageKeyReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("StorageKey"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_object_storage_key"],
-			TypeName:         "ec_object_storage_key",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "StorageKey")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "object.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "StorageObject",
-	}:
-		if err := (&controllersobject.StorageObjectReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("StorageObject"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_object_storage_object"],
-			TypeName:         "ec_object_storage_object",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "StorageObject")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "rdns.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Rdns",
-	}:
-		if err := (&controllersrdns.RdnsReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Rdns"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_rdns"],
-			TypeName:         "ec_rdns",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Rdns")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "sshkey.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Sshkey",
-	}:
-		if err := (&controllerssshkey.SshkeyReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Sshkey"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_sshkey"],
-			TypeName:         "ec_sshkey",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Sshkey")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "stackscript.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Stackscript",
-	}:
-		if err := (&controllersstackscript.StackscriptReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Stackscript"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_stackscript"],
-			TypeName:         "ec_stackscript",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Stackscript")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "token.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Token",
-	}:
-		if err := (&controllerstoken.TokenReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Token"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_token"],
-			TypeName:         "ec_token",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Token")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "user.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "User",
-	}:
-		if err := (&controllersuser.UserReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("User"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_user"],
-			TypeName:         "ec_user",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "User")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "volume.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Volume",
-	}:
-		if err := (&controllersvolume.VolumeReconciler{
-			Client:           mgr.GetClient(),
-			Log:              ctrl.Log.WithName("controllers").WithName("Volume"),
-			Scheme:           mgr.GetScheme(),
-			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_volume"],
-			TypeName:         "ec_volume",
-			WatchOnlyDefault: watchOnlyDefault,
-		}).SetupWithManager(ctx, mgr, auditor); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "Volume")
+			setupLog.Error(err, "unable to create controller", "controller", "TrafficFilterAssociation")
 			return err
 		}
 
@@ -601,174 +307,39 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 func SetupWebhook(mgr manager.Manager, gvk schema.GroupVersionKind) error {
 	switch gvk {
 	case schema.GroupVersionKind{
-		Group:   "domain.ec.kubeform.com",
+		Group:   "deployment.ec.kubeform.com",
 		Version: "v1alpha1",
-		Kind:    "Domain",
+		Kind:    "Deployment",
 	}:
-		if err := (&domainv1alpha1.Domain{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Domain")
+		if err := (&deploymentv1alpha1.Deployment{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "Deployment")
 			return err
 		}
 	case schema.GroupVersionKind{
-		Group:   "domain.ec.kubeform.com",
+		Group:   "deployment.ec.kubeform.com",
 		Version: "v1alpha1",
-		Kind:    "Record",
+		Kind:    "Extension",
 	}:
-		if err := (&domainv1alpha1.Record{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Record")
+		if err := (&deploymentv1alpha1.Extension{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "Extension")
 			return err
 		}
 	case schema.GroupVersionKind{
-		Group:   "firewall.ec.kubeform.com",
+		Group:   "deployment.ec.kubeform.com",
 		Version: "v1alpha1",
-		Kind:    "Firewall",
+		Kind:    "TrafficFilter",
 	}:
-		if err := (&firewallv1alpha1.Firewall{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Firewall")
+		if err := (&deploymentv1alpha1.TrafficFilter{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "TrafficFilter")
 			return err
 		}
 	case schema.GroupVersionKind{
-		Group:   "image.ec.kubeform.com",
+		Group:   "deployment.ec.kubeform.com",
 		Version: "v1alpha1",
-		Kind:    "Image",
+		Kind:    "TrafficFilterAssociation",
 	}:
-		if err := (&imagev1alpha1.Image{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Image")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "instance.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Instance",
-	}:
-		if err := (&instancev1alpha1.Instance{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Instance")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "instance.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Ip",
-	}:
-		if err := (&instancev1alpha1.Ip{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Ip")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "lke.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Cluster",
-	}:
-		if err := (&lkev1alpha1.Cluster{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Cluster")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "nodebalancer.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Nodebalancer",
-	}:
-		if err := (&nodebalancerv1alpha1.Nodebalancer{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Nodebalancer")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "nodebalancer.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Config",
-	}:
-		if err := (&nodebalancerv1alpha1.Config{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Config")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "nodebalancer.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Node",
-	}:
-		if err := (&nodebalancerv1alpha1.Node{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Node")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "object.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "StorageBucket",
-	}:
-		if err := (&objectv1alpha1.StorageBucket{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "StorageBucket")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "object.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "StorageKey",
-	}:
-		if err := (&objectv1alpha1.StorageKey{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "StorageKey")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "object.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "StorageObject",
-	}:
-		if err := (&objectv1alpha1.StorageObject{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "StorageObject")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "rdns.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Rdns",
-	}:
-		if err := (&rdnsv1alpha1.Rdns{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Rdns")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "sshkey.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Sshkey",
-	}:
-		if err := (&sshkeyv1alpha1.Sshkey{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Sshkey")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "stackscript.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Stackscript",
-	}:
-		if err := (&stackscriptv1alpha1.Stackscript{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Stackscript")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "token.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Token",
-	}:
-		if err := (&tokenv1alpha1.Token{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Token")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "user.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "User",
-	}:
-		if err := (&userv1alpha1.User{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "User")
-			return err
-		}
-	case schema.GroupVersionKind{
-		Group:   "volume.ec.kubeform.com",
-		Version: "v1alpha1",
-		Kind:    "Volume",
-	}:
-		if err := (&volumev1alpha1.Volume{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "Volume")
+		if err := (&deploymentv1alpha1.TrafficFilterAssociation{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "TrafficFilterAssociation")
 			return err
 		}
 
