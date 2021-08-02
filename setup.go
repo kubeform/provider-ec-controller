@@ -45,6 +45,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
+var _provider = ec.Provider()
+
 var runningControllers = struct {
 	sync.RWMutex
 	mp map[schema.GroupVersionKind]bool
@@ -234,8 +236,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Deployment"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_deployment"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["ec_deployment"],
 			TypeName:         "ec_deployment",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -252,8 +254,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("Extension"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_deployment_extension"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["ec_deployment_extension"],
 			TypeName:         "ec_deployment_extension",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -270,8 +272,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("TrafficFilter"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_deployment_traffic_filter"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["ec_deployment_traffic_filter"],
 			TypeName:         "ec_deployment_traffic_filter",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
@@ -288,8 +290,8 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 			Log:              ctrl.Log.WithName("controllers").WithName("TrafficFilterAssociation"),
 			Scheme:           mgr.GetScheme(),
 			Gvk:              gvk,
-			Provider:         ec.Provider(),
-			Resource:         ec.Provider().ResourcesMap["ec_deployment_traffic_filter_association"],
+			Provider:         _provider,
+			Resource:         _provider.ResourcesMap["ec_deployment_traffic_filter_association"],
 			TypeName:         "ec_deployment_traffic_filter_association",
 			WatchOnlyDefault: watchOnlyDefault,
 		}).SetupWithManager(ctx, mgr, auditor); err != nil {
