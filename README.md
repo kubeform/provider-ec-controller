@@ -3,7 +3,7 @@
 
 # provider-ec-controller
 
-Kubeform controller for [Terraform Ec Provider](https://github.com/equinix/terraform-provider-metal)
+Kubeform controller for [Terraform Elastic Cloud Provider](https://github.com/elastic/terraform-provider-ec)
 
 ## Installation
 
