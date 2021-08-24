@@ -176,6 +176,9 @@ github.com/fatih/structs
 github.com/form3tech-oss/jwt-go
 # github.com/fsnotify/fsnotify v1.4.9
 github.com/fsnotify/fsnotify
+# github.com/go-errors/errors v1.0.1
+## explicit
+github.com/go-errors/errors
 # github.com/go-logr/logr v0.4.0
 ## explicit
 github.com/go-logr/logr
@@ -411,6 +414,8 @@ github.com/prometheus/common/model
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
+# github.com/qri-io/jsonpointer v0.1.1
+github.com/qri-io/jsonpointer
 # github.com/sergi/go-diff v1.2.0
 github.com/sergi/go-diff/diffmatchpatch
 # github.com/spf13/cobra v1.1.3
@@ -582,15 +587,17 @@ gomodules.xyz/jsonpath/third_party/forked/golang/template
 # gomodules.xyz/logs v0.0.3
 ## explicit
 gomodules.xyz/logs
-# gomodules.xyz/pointer v0.0.0-20201105071923-daf60fa55209
+# gomodules.xyz/mergo v0.3.13-0.20210702100041-9d62ff8ece4d
+gomodules.xyz/mergo
+# gomodules.xyz/pointer v0.1.0
 gomodules.xyz/pointer
-# gomodules.xyz/sets v0.0.0-20210218105342-2efe2fb519a2
+# gomodules.xyz/sets v0.1.0
 gomodules.xyz/sets
 # gomodules.xyz/sync v0.1.0
 gomodules.xyz/sync
 # gomodules.xyz/wait v0.0.0-20210218105358-639bd9211545
 gomodules.xyz/wait
-# gomodules.xyz/x v0.0.5
+# gomodules.xyz/x v0.0.7
 ## explicit
 gomodules.xyz/x/analytics
 gomodules.xyz/x/strings
@@ -1159,7 +1166,7 @@ k8s.io/utils/pointer
 k8s.io/utils/trace
 # kmodules.xyz/apiversion v0.2.0
 kmodules.xyz/apiversion
-# kmodules.xyz/client-go v0.0.0-20210617233340-13d22e91512b
+# kmodules.xyz/client-go v0.0.0-20210822203828-5e9cebbf1dfa
 ## explicit
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -1175,6 +1182,7 @@ kmodules.xyz/client-go/tools/analytics
 kmodules.xyz/client-go/tools/cli
 kmodules.xyz/client-go/tools/clientcache
 kmodules.xyz/client-go/tools/clusterid
+kmodules.xyz/client-go/tools/queue
 # kmodules.xyz/resource-metadata v0.5.7
 kmodules.xyz/resource-metadata/apis/meta
 kmodules.xyz/resource-metadata/apis/meta/v1alpha1
@@ -1186,12 +1194,13 @@ kmodules.xyz/resource-metadata/pkg/graph
 # kubeform.dev/apimachinery v0.0.0-20210629153539-7bcd34a30eb5
 ## explicit
 kubeform.dev/apimachinery/api/v1alpha1
-# kubeform.dev/provider-ec-api v0.3.1-0.20210804223925-97a7c0999bac
+# kubeform.dev/provider-ec-api v0.3.1-0.20210824075823-1276728dc347
 ## explicit
 kubeform.dev/provider-ec-api/api/provider
 kubeform.dev/provider-ec-api/apis/deployment
 kubeform.dev/provider-ec-api/apis/deployment/v1alpha1
 kubeform.dev/provider-ec-api/client/clientset/versioned/scheme
+kubeform.dev/provider-ec-api/util
 # sigs.k8s.io/cli-utils v0.25.0
 ## explicit
 sigs.k8s.io/cli-utils/pkg/kstatus/status
