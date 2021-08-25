@@ -1192,7 +1192,7 @@ kmodules.xyz/resource-metadata/pkg/graph
 ## explicit
 kubeform.dev/apimachinery/api/v1alpha1
 kubeform.dev/apimachinery/pkg/util
-# kubeform.dev/provider-ec-api v0.3.1-0.20210824193543-7f149e705101
+# kubeform.dev/provider-ec-api v0.3.1-0.20210824195147-e1cadd490107
 ## explicit
 kubeform.dev/provider-ec-api/api/provider
 kubeform.dev/provider-ec-api/apis/deployment
