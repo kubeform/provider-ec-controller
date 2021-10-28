@@ -1,4 +1,4 @@
-# cloud.google.com/go v0.79.0 => cloud.google.com/go v0.54.0
+# cloud.google.com/go v0.97.0 => cloud.google.com/go v0.54.0
 cloud.google.com/go
 cloud.google.com/go/compute/metadata
 cloud.google.com/go/iam
@@ -127,7 +127,7 @@ github.com/blang/semver/v4
 github.com/bmatcuk/doublestar
 # github.com/cespare/xxhash/v2 v2.1.1
 github.com/cespare/xxhash/v2
-# github.com/cloudevents/sdk-go/v2 v2.4.1
+# github.com/cloudevents/sdk-go/v2 v2.5.0
 github.com/cloudevents/sdk-go/v2
 github.com/cloudevents/sdk-go/v2/binding
 github.com/cloudevents/sdk-go/v2/binding/format
@@ -150,13 +150,14 @@ github.com/coreos/pkg/capnslog
 github.com/davecgh/go-spew/spew
 # github.com/dimchansky/utfbom v1.1.1
 github.com/dimchansky/utfbom
-# github.com/elastic/cloud-sdk-go v1.4.0
+# github.com/elastic/cloud-sdk-go v1.6.0
 github.com/elastic/cloud-sdk-go/pkg/api
 github.com/elastic/cloud-sdk-go/pkg/api/apierror
 github.com/elastic/cloud-sdk-go/pkg/api/deploymentapi
 github.com/elastic/cloud-sdk-go/pkg/api/deploymentapi/deploymentsize
 github.com/elastic/cloud-sdk-go/pkg/api/deploymentapi/deptemplateapi
 github.com/elastic/cloud-sdk-go/pkg/api/deploymentapi/deputil
+github.com/elastic/cloud-sdk-go/pkg/api/deploymentapi/eskeystoreapi
 github.com/elastic/cloud-sdk-go/pkg/api/deploymentapi/esremoteclustersapi
 github.com/elastic/cloud-sdk-go/pkg/api/deploymentapi/extensionapi
 github.com/elastic/cloud-sdk-go/pkg/api/deploymentapi/trafficfilterapi
@@ -166,9 +167,11 @@ github.com/elastic/cloud-sdk-go/pkg/auth
 github.com/elastic/cloud-sdk-go/pkg/client
 github.com/elastic/cloud-sdk-go/pkg/client/accounts
 github.com/elastic/cloud-sdk-go/pkg/client/authentication
+github.com/elastic/cloud-sdk-go/pkg/client/billing_costs_analysis
 github.com/elastic/cloud-sdk-go/pkg/client/clusters
 github.com/elastic/cloud-sdk-go/pkg/client/clusters_apm
 github.com/elastic/cloud-sdk-go/pkg/client/clusters_elasticsearch
+github.com/elastic/cloud-sdk-go/pkg/client/clusters_enterprise_search
 github.com/elastic/cloud-sdk-go/pkg/client/clusters_kibana
 github.com/elastic/cloud-sdk-go/pkg/client/comments
 github.com/elastic/cloud-sdk-go/pkg/client/deployment_templates
@@ -195,13 +198,14 @@ github.com/elastic/cloud-sdk-go/pkg/plan/planutil
 github.com/elastic/cloud-sdk-go/pkg/util
 github.com/elastic/cloud-sdk-go/pkg/util/ec
 github.com/elastic/cloud-sdk-go/pkg/util/slice
-# github.com/elastic/terraform-provider-ec v0.2.1
+# github.com/elastic/terraform-provider-ec v0.3.0
 ## explicit
 github.com/elastic/terraform-provider-ec/ec
 github.com/elastic/terraform-provider-ec/ec/ecdatasource/deploymentdatasource
 github.com/elastic/terraform-provider-ec/ec/ecdatasource/deploymentsdatasource
 github.com/elastic/terraform-provider-ec/ec/ecdatasource/stackdatasource
 github.com/elastic/terraform-provider-ec/ec/ecresource/deploymentresource
+github.com/elastic/terraform-provider-ec/ec/ecresource/elasticsearchkeystoreresource
 github.com/elastic/terraform-provider-ec/ec/ecresource/extensionresource
 github.com/elastic/terraform-provider-ec/ec/ecresource/trafficfilterassocresource
 github.com/elastic/terraform-provider-ec/ec/ecresource/trafficfilterresource
@@ -226,7 +230,7 @@ github.com/go-logr/logr
 # github.com/go-openapi/analysis v0.20.0
 github.com/go-openapi/analysis
 github.com/go-openapi/analysis/internal
-# github.com/go-openapi/errors v0.20.0
+# github.com/go-openapi/errors v0.20.1
 github.com/go-openapi/errors
 # github.com/go-openapi/jsonpointer v0.19.5
 github.com/go-openapi/jsonpointer
@@ -234,7 +238,7 @@ github.com/go-openapi/jsonpointer
 github.com/go-openapi/jsonreference
 # github.com/go-openapi/loads v0.20.2
 github.com/go-openapi/loads
-# github.com/go-openapi/runtime v0.19.29
+# github.com/go-openapi/runtime v0.20.0
 github.com/go-openapi/runtime
 github.com/go-openapi/runtime/client
 github.com/go-openapi/runtime/logger
@@ -246,7 +250,7 @@ github.com/go-openapi/runtime/security
 github.com/go-openapi/runtime/yamlpc
 # github.com/go-openapi/spec v0.20.3
 github.com/go-openapi/spec
-# github.com/go-openapi/strfmt v0.20.1
+# github.com/go-openapi/strfmt v0.20.3
 github.com/go-openapi/strfmt
 # github.com/go-openapi/swag v0.19.15
 github.com/go-openapi/swag
@@ -285,8 +289,10 @@ github.com/google/go-querystring/query
 github.com/google/gofuzz
 # github.com/google/uuid v1.2.0
 github.com/google/uuid
-# github.com/googleapis/gax-go/v2 v2.0.5
+# github.com/googleapis/gax-go/v2 v2.1.1
 github.com/googleapis/gax-go/v2
+github.com/googleapis/gax-go/v2/apierror
+github.com/googleapis/gax-go/v2/apierror/internal/proto
 # github.com/googleapis/gnostic v0.5.5 => github.com/googleapis/gnostic v0.4.1
 github.com/googleapis/gnostic/compiler
 github.com/googleapis/gnostic/extensions
@@ -393,20 +399,20 @@ github.com/hashicorp/terraform-exec/tfexec
 github.com/hashicorp/terraform-exec/tfinstall
 # github.com/hashicorp/terraform-json v0.12.0
 github.com/hashicorp/terraform-json
-# github.com/hashicorp/terraform-plugin-go v0.3.0
+# github.com/hashicorp/terraform-plugin-go v0.4.0
 ## explicit
 github.com/hashicorp/terraform-plugin-go/tfprotov5
 github.com/hashicorp/terraform-plugin-go/tfprotov5/internal/fromproto
 github.com/hashicorp/terraform-plugin-go/tfprotov5/internal/tfplugin5
 github.com/hashicorp/terraform-plugin-go/tfprotov5/internal/toproto
-github.com/hashicorp/terraform-plugin-go/tfprotov5/server
+github.com/hashicorp/terraform-plugin-go/tfprotov5/tf5server
 github.com/hashicorp/terraform-plugin-go/tfprotov6
 github.com/hashicorp/terraform-plugin-go/tfprotov6/internal/fromproto
 github.com/hashicorp/terraform-plugin-go/tfprotov6/internal/tfplugin6
 github.com/hashicorp/terraform-plugin-go/tfprotov6/internal/toproto
-github.com/hashicorp/terraform-plugin-go/tfprotov6/server
+github.com/hashicorp/terraform-plugin-go/tfprotov6/tf6server
 github.com/hashicorp/terraform-plugin-go/tftypes
-# github.com/hashicorp/terraform-plugin-sdk/v2 v2.7.0
+# github.com/hashicorp/terraform-plugin-sdk/v2 v2.8.0
 ## explicit
 github.com/hashicorp/terraform-plugin-sdk/v2/diag
 github.com/hashicorp/terraform-plugin-sdk/v2/helper/logging
@@ -505,7 +511,7 @@ github.com/modern-go/concurrent
 github.com/modern-go/reflect2
 # github.com/mozillazg/go-httpheader v0.3.0
 github.com/mozillazg/go-httpheader
-# github.com/nats-io/nats.go v1.11.0
+# github.com/nats-io/nats.go v1.13.0
 github.com/nats-io/nats.go
 github.com/nats-io/nats.go/encoders/builtin
 github.com/nats-io/nats.go/util
@@ -548,10 +554,10 @@ github.com/prometheus/procfs/internal/util
 github.com/qri-io/jsonpointer
 # github.com/sergi/go-diff v1.2.0
 github.com/sergi/go-diff/diffmatchpatch
-# github.com/spf13/afero v1.2.2
+# github.com/spf13/afero v1.6.0
 github.com/spf13/afero
 github.com/spf13/afero/mem
-# github.com/spf13/cobra v1.1.3
+# github.com/spf13/cobra v1.2.1
 ## explicit
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
@@ -603,11 +609,11 @@ github.com/zclconf/go-cty/cty/msgpack
 github.com/zclconf/go-cty/cty/set
 # github.com/zclconf/go-cty-yaml v1.0.2
 github.com/zclconf/go-cty-yaml
-# go.bytebuilders.dev/audit v0.0.7
+# go.bytebuilders.dev/audit v0.0.11
 ## explicit
 go.bytebuilders.dev/audit/api/v1
 go.bytebuilders.dev/audit/lib
-# go.bytebuilders.dev/license-verifier v0.9.2
+# go.bytebuilders.dev/license-verifier v0.9.3
 ## explicit
 go.bytebuilders.dev/license-verifier
 go.bytebuilders.dev/license-verifier/apis/licenses
@@ -645,7 +651,7 @@ go.opencensus.io/trace/tracestate
 go.uber.org/atomic
 # go.uber.org/multierr v1.6.0
 go.uber.org/multierr
-# go.uber.org/zap v1.17.0
+# go.uber.org/zap v1.19.0
 go.uber.org/zap
 go.uber.org/zap/buffer
 go.uber.org/zap/internal/bufferpool
@@ -675,7 +681,7 @@ golang.org/x/crypto/scrypt
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/agent
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/lint v0.0.0-20201208152925-83fdc39ff7b5
+# golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 golang.org/x/lint
 golang.org/x/lint/golint
 # golang.org/x/mod v0.4.2
@@ -692,14 +698,15 @@ golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/publicsuffix
 golang.org/x/net/trace
-# golang.org/x/oauth2 v0.0.0-20210313182246-cd4f82c27b84
+# golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1
 golang.org/x/oauth2
+golang.org/x/oauth2/authhandler
 golang.org/x/oauth2/google
 golang.org/x/oauth2/google/internal/externalaccount
 golang.org/x/oauth2/internal
 golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
-# golang.org/x/sys v0.0.0-20210502180810-71e4cd670f79
+# golang.org/x/sys v0.0.0-20211007075335-d3039528d8ac
 golang.org/x/sys/cpu
 golang.org/x/sys/execabs
 golang.org/x/sys/internal/unsafeheader
@@ -726,9 +733,9 @@ golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
-# golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba
+# golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac
 golang.org/x/time/rate
-# golang.org/x/tools v0.1.0
+# golang.org/x/tools v0.1.5
 golang.org/x/tools/cmd/goimports
 golang.org/x/tools/go/analysis
 golang.org/x/tools/go/analysis/passes/inspect
@@ -754,40 +761,42 @@ golang.org/x/tools/internal/gopathwalk
 golang.org/x/tools/internal/imports
 golang.org/x/tools/internal/lsp/fuzzy
 golang.org/x/tools/internal/packagesinternal
+golang.org/x/tools/internal/typeparams
 golang.org/x/tools/internal/typesinternal
 # golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 golang.org/x/xerrors
 golang.org/x/xerrors/internal
 # gomodules.xyz/clock v0.0.0-20200817085942-06523dba733f
 gomodules.xyz/clock
-# gomodules.xyz/flags v0.1.0
+# gomodules.xyz/flags v0.1.2
 gomodules.xyz/flags
-# gomodules.xyz/homedir v0.0.0-20201104190528-bcd4d5d94b84
+# gomodules.xyz/homedir v0.1.0
 gomodules.xyz/homedir
 # gomodules.xyz/jsonpatch/v2 v2.2.0
 gomodules.xyz/jsonpatch/v2
 # gomodules.xyz/jsonpath v0.0.1
 gomodules.xyz/jsonpath
 gomodules.xyz/jsonpath/third_party/forked/golang/template
-# gomodules.xyz/logs v0.0.3
+# gomodules.xyz/logs v0.0.4
 ## explicit
 gomodules.xyz/logs
 # gomodules.xyz/mergo v0.3.13-0.20210702100041-9d62ff8ece4d
 gomodules.xyz/mergo
 # gomodules.xyz/pointer v0.1.0
 gomodules.xyz/pointer
-# gomodules.xyz/sets v0.1.0
+# gomodules.xyz/sets v0.2.0
 gomodules.xyz/sets
 # gomodules.xyz/sync v0.1.0
 gomodules.xyz/sync
 # gomodules.xyz/wait v0.0.0-20210218105358-639bd9211545
 gomodules.xyz/wait
-# gomodules.xyz/x v0.0.7
+# gomodules.xyz/x v0.0.8
 ## explicit
 gomodules.xyz/x/analytics
 gomodules.xyz/x/strings
 gomodules.xyz/x/version
-# google.golang.org/api v0.44.0-impersonate-preview
+# google.golang.org/api v0.59.0
+## explicit
 google.golang.org/api/googleapi
 google.golang.org/api/googleapi/transport
 google.golang.org/api/impersonate
@@ -817,13 +826,14 @@ google.golang.org/appengine/internal/modules
 google.golang.org/appengine/internal/remote_api
 google.golang.org/appengine/internal/urlfetch
 google.golang.org/appengine/urlfetch
-# google.golang.org/genproto v0.0.0-20210319143718-93e7006c17a6 => google.golang.org/genproto v0.0.0-20201110150050-8816d57aaa9a
+# google.golang.org/genproto v0.0.0-20211008145708-270636b82663 => google.golang.org/genproto v0.0.0-20201110150050-8816d57aaa9a
 google.golang.org/genproto/googleapis/api/annotations
 google.golang.org/genproto/googleapis/iam/v1
 google.golang.org/genproto/googleapis/rpc/code
+google.golang.org/genproto/googleapis/rpc/errdetails
 google.golang.org/genproto/googleapis/rpc/status
 google.golang.org/genproto/googleapis/type/expr
-# google.golang.org/grpc v1.36.0 => google.golang.org/grpc v1.32.0
+# google.golang.org/grpc v1.40.0 => google.golang.org/grpc v1.32.0
 google.golang.org/grpc
 google.golang.org/grpc/attributes
 google.golang.org/grpc/backoff
@@ -868,7 +878,7 @@ google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
-# google.golang.org/protobuf v1.25.0
+# google.golang.org/protobuf v1.27.1
 google.golang.org/protobuf/cmd/protoc-gen-go/internal_gengo
 google.golang.org/protobuf/compiler/protogen
 google.golang.org/protobuf/encoding/protojson
@@ -883,13 +893,12 @@ google.golang.org/protobuf/internal/encoding/messageset
 google.golang.org/protobuf/internal/encoding/tag
 google.golang.org/protobuf/internal/encoding/text
 google.golang.org/protobuf/internal/errors
-google.golang.org/protobuf/internal/fieldsort
 google.golang.org/protobuf/internal/filedesc
 google.golang.org/protobuf/internal/filetype
 google.golang.org/protobuf/internal/flags
 google.golang.org/protobuf/internal/genid
 google.golang.org/protobuf/internal/impl
-google.golang.org/protobuf/internal/mapsort
+google.golang.org/protobuf/internal/order
 google.golang.org/protobuf/internal/pragma
 google.golang.org/protobuf/internal/set
 google.golang.org/protobuf/internal/strs
@@ -1347,14 +1356,14 @@ k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset/typed/apiregistr
 # k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7 => k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7
 k8s.io/kube-openapi/pkg/common
 k8s.io/kube-openapi/pkg/util/proto
-# k8s.io/utils v0.0.0-20210527160623-6fdb442a123b => k8s.io/utils v0.0.0-20201110183641-67b214c5f920
+# k8s.io/utils v0.0.0-20210802155522-efc7438f0176 => k8s.io/utils v0.0.0-20201110183641-67b214c5f920
 k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/pointer
 k8s.io/utils/trace
 # kmodules.xyz/apiversion v0.2.0
 kmodules.xyz/apiversion
-# kmodules.xyz/client-go v0.0.0-20210822203828-5e9cebbf1dfa
+# kmodules.xyz/client-go v0.0.0-20211028120227-48eb36f92a30
 ## explicit
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -1371,7 +1380,13 @@ kmodules.xyz/client-go/tools/cli
 kmodules.xyz/client-go/tools/clientcache
 kmodules.xyz/client-go/tools/clusterid
 kmodules.xyz/client-go/tools/queue
-# kmodules.xyz/resource-metadata v0.5.7
+# kmodules.xyz/custom-resources v0.0.0-20211007080833-72bd9e8cae6e
+kmodules.xyz/custom-resources/apis/auditor
+kmodules.xyz/custom-resources/apis/auditor/v1alpha1
+kmodules.xyz/custom-resources/util/siteinfo
+# kmodules.xyz/offshoot-api v0.0.0-20210829122105-6f4d481b0c61
+kmodules.xyz/offshoot-api/api/v1
+# kmodules.xyz/resource-metadata v0.6.7
 kmodules.xyz/resource-metadata/apis/meta
 kmodules.xyz/resource-metadata/apis/meta/v1alpha1
 kmodules.xyz/resource-metadata/crds
@@ -1379,11 +1394,13 @@ kmodules.xyz/resource-metadata/hub
 kmodules.xyz/resource-metadata/hub/resourceclasses
 kmodules.xyz/resource-metadata/hub/resourcedescriptors
 kmodules.xyz/resource-metadata/pkg/graph
+# kmodules.xyz/resource-metrics v0.0.5
+kmodules.xyz/resource-metrics/api
 # kubeform.dev/apimachinery v0.0.0-20210824104859-ba5604d5a1cc
 ## explicit
 kubeform.dev/apimachinery/api/v1alpha1
 kubeform.dev/apimachinery/pkg/util
-# kubeform.dev/provider-ec-api v0.3.1-0.20211020085446-2526cdf6ce8c
+# kubeform.dev/provider-ec-api v0.3.1-0.20211028192003-8b6e67c63c63
 ## explicit
 kubeform.dev/provider-ec-api/api/provider
 kubeform.dev/provider-ec-api/apis/deployment
@@ -1499,7 +1516,7 @@ sigs.k8s.io/controller-runtime/pkg/webhook
 sigs.k8s.io/controller-runtime/pkg/webhook/admission
 sigs.k8s.io/controller-runtime/pkg/webhook/conversion
 sigs.k8s.io/controller-runtime/pkg/webhook/internal/metrics
-# sigs.k8s.io/structured-merge-diff/v4 v4.1.0
+# sigs.k8s.io/structured-merge-diff/v4 v4.1.2
 sigs.k8s.io/structured-merge-diff/v4/fieldpath
 sigs.k8s.io/structured-merge-diff/v4/schema
 sigs.k8s.io/structured-merge-diff/v4/typed

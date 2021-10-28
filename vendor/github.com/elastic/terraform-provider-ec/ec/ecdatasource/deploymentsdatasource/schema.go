@@ -92,7 +92,19 @@ func newDeploymentList() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"name": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"alias": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"elasticsearch_resource_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"elasticsearch_ref_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -100,11 +112,23 @@ func newDeploymentList() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"kibana_ref_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"apm_resource_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"apm_ref_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"enterprise_search_resource_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"enterprise_search_ref_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},

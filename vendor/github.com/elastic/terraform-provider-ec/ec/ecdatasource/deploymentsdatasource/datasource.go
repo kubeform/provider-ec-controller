@@ -82,21 +82,30 @@ func modelToState(d *schema.ResourceData, res *models.DeploymentsSearchResponse)
 		var m = make(map[string]interface{})
 
 		m["deployment_id"] = *deployment.ID
+		m["alias"] = deployment.Alias
+
+		if deployment.Name != nil {
+			m["name"] = deployment.Name
+		}
 
 		if len(deployment.Resources.Elasticsearch) > 0 {
 			m["elasticsearch_resource_id"] = *deployment.Resources.Elasticsearch[0].ID
+			m["elasticsearch_ref_id"] = *deployment.Resources.Elasticsearch[0].RefID
 		}
 
 		if len(deployment.Resources.Kibana) > 0 {
 			m["kibana_resource_id"] = *deployment.Resources.Kibana[0].ID
+			m["kibana_ref_id"] = *deployment.Resources.Kibana[0].RefID
 		}
 
 		if len(deployment.Resources.Apm) > 0 {
 			m["apm_resource_id"] = *deployment.Resources.Apm[0].ID
+			m["apm_ref_id"] = *deployment.Resources.Apm[0].RefID
 		}
 
 		if len(deployment.Resources.EnterpriseSearch) > 0 {
 			m["enterprise_search_resource_id"] = *deployment.Resources.EnterpriseSearch[0].ID
+			m["enterprise_search_ref_id"] = *deployment.Resources.EnterpriseSearch[0].RefID
 		}
 
 		result = append(result, m)

@@ -246,6 +246,12 @@ func expandEsTopology(raw interface{}, topologies []*models.ElasticsearchCluster
 				}
 			}
 		}
+
+		if cfg, ok := topology["config"]; ok {
+			if err := expandEsConfig(cfg, elem.Elasticsearch); err != nil {
+				return nil, err
+			}
+		}
 	}
 
 	return res, nil
@@ -253,7 +259,10 @@ func expandEsTopology(raw interface{}, topologies []*models.ElasticsearchCluster
 
 func expandEsConfig(raw interface{}, esCfg *models.ElasticsearchConfiguration) error {
 	for _, rawCfg := range raw.([]interface{}) {
-		var cfg = rawCfg.(map[string]interface{})
+		cfg, ok := rawCfg.(map[string]interface{})
+		if !ok {
+			continue
+		}
 		if settings, ok := cfg["user_settings_json"]; ok && settings != nil {
 			if s, ok := settings.(string); ok && s != "" {
 				if err := json.Unmarshal([]byte(s), &esCfg.UserSettingsJSON); err != nil {
@@ -281,6 +290,10 @@ func expandEsConfig(raw interface{}, esCfg *models.ElasticsearchConfiguration) e
 
 		if v, ok := cfg["plugins"]; ok {
 			esCfg.EnabledBuiltInPlugins = util.ItemsToString(v.(*schema.Set).List())
+		}
+
+		if v, ok := cfg["docker_image"]; ok {
+			esCfg.DockerImage = v.(string)
 		}
 	}
 
