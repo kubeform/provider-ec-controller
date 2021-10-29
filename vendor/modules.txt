@@ -1391,7 +1391,7 @@ kmodules.xyz/resource-metrics/api
 ## explicit
 kubeform.dev/apimachinery/api/v1alpha1
 kubeform.dev/apimachinery/pkg/util
-# kubeform.dev/provider-ec-api v0.3.1-0.20211029110830-128dfc834591
+# kubeform.dev/provider-ec-api v0.4.0
 ## explicit
 kubeform.dev/provider-ec-api/api/provider
 kubeform.dev/provider-ec-api/apis/deployment
