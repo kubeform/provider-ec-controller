@@ -30,42 +30,40 @@ type Data struct {
 	ResourceType string
 }
 
-var (
-	allJsonIt = map[schema.GroupVersionResource]Data{
-		{
-			Group:    "deployment.ec.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "deployments",
-		}: {
-			JsonIt:       controllers.GetJSONItr(deploymentv1alpha1.GetEncoder(), deploymentv1alpha1.GetDecoder()),
-			ResourceType: "ec_deployment",
-		},
-		{
-			Group:    "deployment.ec.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "extensions",
-		}: {
-			JsonIt:       controllers.GetJSONItr(deploymentv1alpha1.GetEncoder(), deploymentv1alpha1.GetDecoder()),
-			ResourceType: "ec_deployment_extension",
-		},
-		{
-			Group:    "deployment.ec.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "trafficfilters",
-		}: {
-			JsonIt:       controllers.GetJSONItr(deploymentv1alpha1.GetEncoder(), deploymentv1alpha1.GetDecoder()),
-			ResourceType: "ec_deployment_traffic_filter",
-		},
-		{
-			Group:    "deployment.ec.kubeform.com",
-			Version:  "v1alpha1",
-			Resource: "trafficfilterassociations",
-		}: {
-			JsonIt:       controllers.GetJSONItr(deploymentv1alpha1.GetEncoder(), deploymentv1alpha1.GetDecoder()),
-			ResourceType: "ec_deployment_traffic_filter_association",
-		},
-	}
-)
+var allJsonIt = map[schema.GroupVersionResource]Data{
+	{
+		Group:    "deployment.ec.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "deployments",
+	}: {
+		JsonIt:       controllers.GetJSONItr(deploymentv1alpha1.GetEncoder(), deploymentv1alpha1.GetDecoder()),
+		ResourceType: "ec_deployment",
+	},
+	{
+		Group:    "deployment.ec.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "extensions",
+	}: {
+		JsonIt:       controllers.GetJSONItr(deploymentv1alpha1.GetEncoder(), deploymentv1alpha1.GetDecoder()),
+		ResourceType: "ec_deployment_extension",
+	},
+	{
+		Group:    "deployment.ec.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "trafficfilters",
+	}: {
+		JsonIt:       controllers.GetJSONItr(deploymentv1alpha1.GetEncoder(), deploymentv1alpha1.GetDecoder()),
+		ResourceType: "ec_deployment_traffic_filter",
+	},
+	{
+		Group:    "deployment.ec.kubeform.com",
+		Version:  "v1alpha1",
+		Resource: "trafficfilterassociations",
+	}: {
+		JsonIt:       controllers.GetJSONItr(deploymentv1alpha1.GetEncoder(), deploymentv1alpha1.GetDecoder()),
+		ResourceType: "ec_deployment_traffic_filter_association",
+	},
+}
 
 func getJsonItAndResType(gvr schema.GroupVersionResource) Data {
 	return allJsonIt[gvr]
