@@ -83,14 +83,11 @@ func modelToState(d *schema.ResourceData, res *models.DeploymentGetResponse) err
 		return err
 	}
 
-	if res.Alias != "" {
-		if err := d.Set("alias", res.Alias); err != nil {
-			return err
-		}
+	if err := d.Set("alias", res.Alias); err != nil {
+		return err
 	}
 
 	es := res.Resources.Elasticsearch[0]
-
 	if es.Region != nil {
 		if err := d.Set("region", *es.Region); err != nil {
 			return err
@@ -131,6 +128,11 @@ func modelToState(d *schema.ResourceData, res *models.DeploymentGetResponse) err
 
 	apmFlattened := flattenApmResources(res.Resources.Apm)
 	if err := d.Set("apm", apmFlattened); err != nil {
+		return err
+	}
+
+	integrationsServerFlattened := flattenIntegrationsServerResources(res.Resources.IntegrationsServer)
+	if err := d.Set("integrations_server", integrationsServerFlattened); err != nil {
 		return err
 	}
 

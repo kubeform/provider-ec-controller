@@ -90,6 +90,14 @@ func createResourceToModel(d *schema.ResourceData, client *api.API) (*models.Dep
 	}
 	result.Resources.Apm = append(result.Resources.Apm, apmRes...)
 
+	integrationsServerRes, err := expandIntegrationsServerResources(
+		d.Get("integrations_server").([]interface{}), integrationsServerResource(template),
+	)
+	if err != nil {
+		merr = merr.Append(err)
+	}
+	result.Resources.IntegrationsServer = append(result.Resources.IntegrationsServer, integrationsServerRes...)
+
 	enterpriseSearchRes, err := expandEssResources(
 		d.Get("enterprise_search").([]interface{}), essResource(template),
 	)
@@ -118,6 +126,7 @@ func createResourceToModel(d *schema.ResourceData, client *api.API) (*models.Dep
 func updateResourceToModel(d *schema.ResourceData, client *api.API) (*models.DeploymentUpdateRequest, error) {
 	var result = models.DeploymentUpdateRequest{
 		Name:         d.Get("name").(string),
+		Alias:        d.Get("alias").(string),
 		PruneOrphans: ec.Bool(true),
 		Resources:    &models.DeploymentUpdateResources{},
 		Settings:     &models.DeploymentUpdateSettings{},
@@ -139,6 +148,7 @@ func updateResourceToModel(d *schema.ResourceData, client *api.API) (*models.Dep
 	es := d.Get("elasticsearch").([]interface{})
 	kibana := d.Get("kibana").([]interface{})
 	apm := d.Get("apm").([]interface{})
+	integrationsServer := d.Get("integrations_server").([]interface{})
 	enterpriseSearch := d.Get("enterprise_search").([]interface{})
 
 	// When the deployment template is changed, we need to unset the missing
@@ -155,12 +165,10 @@ func updateResourceToModel(d *schema.ResourceData, client *api.API) (*models.Dep
 		unsetTopology(es)
 	}
 
-	nodeRolesCompatible, err := compatibleWithNodeRoles(version)
+	useNodeRoles, err := compatibleWithNodeRoles(version)
 	if err != nil {
 		return nil, err
 	}
-	useNodeRoles := d.HasChange("elasticsearch") && nodeRolesCompatible
-
 	convertLegacy, err := legacyToNodeRoles(d)
 	if err != nil {
 		return nil, err
@@ -194,6 +202,12 @@ func updateResourceToModel(d *schema.ResourceData, client *api.API) (*models.Dep
 		merr = merr.Append(err)
 	}
 	result.Resources.Apm = append(result.Resources.Apm, apmRes...)
+
+	integrationsServerRes, err := expandIntegrationsServerResources(integrationsServer, integrationsServerResource(template))
+	if err != nil {
+		merr = merr.Append(err)
+	}
+	result.Resources.IntegrationsServer = append(result.Resources.IntegrationsServer, integrationsServerRes...)
 
 	enterpriseSearchRes, err := expandEssResources(enterpriseSearch, essResource(template))
 	if err != nil {

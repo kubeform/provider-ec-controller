@@ -86,7 +86,7 @@ func (r *Extension) ValidateUpdate(old runtime.Object) error {
 		return err
 	}
 
-	for key := range extensionForceNewList {
+	for key, _ := range extensionForceNewList {
 		keySplit := strings.Split(key, "/*")
 		length := len(keySplit)
 		checkIfAnyDif := false

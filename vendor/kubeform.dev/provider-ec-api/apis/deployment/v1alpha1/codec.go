@@ -35,6 +35,8 @@ func GetEncoder() map[string]jsoniter.ValEncoder {
 		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecElasticsearchTopologyAutoscaling{}).Type1()): DeploymentSpecElasticsearchTopologyAutoscalingCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecEnterpriseSearch{}).Type1()):                 DeploymentSpecEnterpriseSearchCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecEnterpriseSearchConfig{}).Type1()):           DeploymentSpecEnterpriseSearchConfigCodec{},
+		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecIntegrationsServer{}).Type1()):               DeploymentSpecIntegrationsServerCodec{},
+		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecIntegrationsServerConfig{}).Type1()):         DeploymentSpecIntegrationsServerConfigCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecKibana{}).Type1()):                           DeploymentSpecKibanaCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecKibanaConfig{}).Type1()):                     DeploymentSpecKibanaConfigCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecObservability{}).Type1()):                    DeploymentSpecObservabilityCodec{},
@@ -51,6 +53,8 @@ func GetDecoder() map[string]jsoniter.ValDecoder {
 		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecElasticsearchTopologyAutoscaling{}).Type1()): DeploymentSpecElasticsearchTopologyAutoscalingCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecEnterpriseSearch{}).Type1()):                 DeploymentSpecEnterpriseSearchCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecEnterpriseSearchConfig{}).Type1()):           DeploymentSpecEnterpriseSearchConfigCodec{},
+		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecIntegrationsServer{}).Type1()):               DeploymentSpecIntegrationsServerCodec{},
+		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecIntegrationsServerConfig{}).Type1()):         DeploymentSpecIntegrationsServerConfigCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecKibana{}).Type1()):                           DeploymentSpecKibanaCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecKibanaConfig{}).Type1()):                     DeploymentSpecKibanaConfigCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecObservability{}).Type1()):                    DeploymentSpecObservabilityCodec{},
@@ -698,6 +702,164 @@ func (DeploymentSpecEnterpriseSearchConfigCodec) Decode(ptr unsafe.Pointer, iter
 		}
 	default:
 		iter.ReportError("decode DeploymentSpecEnterpriseSearchConfig", "unexpected JSON type")
+	}
+}
+
+// +k8s:deepcopy-gen=false
+type DeploymentSpecIntegrationsServerCodec struct {
+}
+
+func (DeploymentSpecIntegrationsServerCodec) IsEmpty(ptr unsafe.Pointer) bool {
+	return (*DeploymentSpecIntegrationsServer)(ptr) == nil
+}
+
+func (DeploymentSpecIntegrationsServerCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
+	obj := (*DeploymentSpecIntegrationsServer)(ptr)
+	var objs []DeploymentSpecIntegrationsServer
+	if obj != nil {
+		objs = []DeploymentSpecIntegrationsServer{*obj}
+	}
+
+	jsonit := jsoniter.Config{
+		EscapeHTML:             true,
+		SortMapKeys:            true,
+		ValidateJsonRawMessage: true,
+		TagKey:                 "tf",
+		TypeEncoders:           getEncodersWithout(jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecIntegrationsServer{}).Type1())),
+	}.Froze()
+
+	byt, _ := jsonit.Marshal(objs)
+
+	stream.Write(byt)
+}
+
+func (DeploymentSpecIntegrationsServerCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
+	switch iter.WhatIsNext() {
+	case jsoniter.NilValue:
+		iter.Skip()
+		*(*DeploymentSpecIntegrationsServer)(ptr) = DeploymentSpecIntegrationsServer{}
+		return
+	case jsoniter.ArrayValue:
+		objsByte := iter.SkipAndReturnBytes()
+		if len(objsByte) > 0 {
+			var objs []DeploymentSpecIntegrationsServer
+
+			jsonit := jsoniter.Config{
+				EscapeHTML:             true,
+				SortMapKeys:            true,
+				ValidateJsonRawMessage: true,
+				TagKey:                 "tf",
+				TypeDecoders:           getDecodersWithout(jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecIntegrationsServer{}).Type1())),
+			}.Froze()
+			jsonit.Unmarshal(objsByte, &objs)
+
+			if len(objs) > 0 {
+				*(*DeploymentSpecIntegrationsServer)(ptr) = objs[0]
+			} else {
+				*(*DeploymentSpecIntegrationsServer)(ptr) = DeploymentSpecIntegrationsServer{}
+			}
+		} else {
+			*(*DeploymentSpecIntegrationsServer)(ptr) = DeploymentSpecIntegrationsServer{}
+		}
+	case jsoniter.ObjectValue:
+		objByte := iter.SkipAndReturnBytes()
+		if len(objByte) > 0 {
+			var obj DeploymentSpecIntegrationsServer
+
+			jsonit := jsoniter.Config{
+				EscapeHTML:             true,
+				SortMapKeys:            true,
+				ValidateJsonRawMessage: true,
+				TagKey:                 "tf",
+				TypeDecoders:           getDecodersWithout(jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecIntegrationsServer{}).Type1())),
+			}.Froze()
+			jsonit.Unmarshal(objByte, &obj)
+
+			*(*DeploymentSpecIntegrationsServer)(ptr) = obj
+		} else {
+			*(*DeploymentSpecIntegrationsServer)(ptr) = DeploymentSpecIntegrationsServer{}
+		}
+	default:
+		iter.ReportError("decode DeploymentSpecIntegrationsServer", "unexpected JSON type")
+	}
+}
+
+// +k8s:deepcopy-gen=false
+type DeploymentSpecIntegrationsServerConfigCodec struct {
+}
+
+func (DeploymentSpecIntegrationsServerConfigCodec) IsEmpty(ptr unsafe.Pointer) bool {
+	return (*DeploymentSpecIntegrationsServerConfig)(ptr) == nil
+}
+
+func (DeploymentSpecIntegrationsServerConfigCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
+	obj := (*DeploymentSpecIntegrationsServerConfig)(ptr)
+	var objs []DeploymentSpecIntegrationsServerConfig
+	if obj != nil {
+		objs = []DeploymentSpecIntegrationsServerConfig{*obj}
+	}
+
+	jsonit := jsoniter.Config{
+		EscapeHTML:             true,
+		SortMapKeys:            true,
+		ValidateJsonRawMessage: true,
+		TagKey:                 "tf",
+		TypeEncoders:           getEncodersWithout(jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecIntegrationsServerConfig{}).Type1())),
+	}.Froze()
+
+	byt, _ := jsonit.Marshal(objs)
+
+	stream.Write(byt)
+}
+
+func (DeploymentSpecIntegrationsServerConfigCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
+	switch iter.WhatIsNext() {
+	case jsoniter.NilValue:
+		iter.Skip()
+		*(*DeploymentSpecIntegrationsServerConfig)(ptr) = DeploymentSpecIntegrationsServerConfig{}
+		return
+	case jsoniter.ArrayValue:
+		objsByte := iter.SkipAndReturnBytes()
+		if len(objsByte) > 0 {
+			var objs []DeploymentSpecIntegrationsServerConfig
+
+			jsonit := jsoniter.Config{
+				EscapeHTML:             true,
+				SortMapKeys:            true,
+				ValidateJsonRawMessage: true,
+				TagKey:                 "tf",
+				TypeDecoders:           getDecodersWithout(jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecIntegrationsServerConfig{}).Type1())),
+			}.Froze()
+			jsonit.Unmarshal(objsByte, &objs)
+
+			if len(objs) > 0 {
+				*(*DeploymentSpecIntegrationsServerConfig)(ptr) = objs[0]
+			} else {
+				*(*DeploymentSpecIntegrationsServerConfig)(ptr) = DeploymentSpecIntegrationsServerConfig{}
+			}
+		} else {
+			*(*DeploymentSpecIntegrationsServerConfig)(ptr) = DeploymentSpecIntegrationsServerConfig{}
+		}
+	case jsoniter.ObjectValue:
+		objByte := iter.SkipAndReturnBytes()
+		if len(objByte) > 0 {
+			var obj DeploymentSpecIntegrationsServerConfig
+
+			jsonit := jsoniter.Config{
+				EscapeHTML:             true,
+				SortMapKeys:            true,
+				ValidateJsonRawMessage: true,
+				TagKey:                 "tf",
+				TypeDecoders:           getDecodersWithout(jsoniter.MustGetKind(reflect2.TypeOf(DeploymentSpecIntegrationsServerConfig{}).Type1())),
+			}.Froze()
+			jsonit.Unmarshal(objByte, &obj)
+
+			*(*DeploymentSpecIntegrationsServerConfig)(ptr) = obj
+		} else {
+			*(*DeploymentSpecIntegrationsServerConfig)(ptr) = DeploymentSpecIntegrationsServerConfig{}
+		}
+	default:
+		iter.ReportError("decode DeploymentSpecIntegrationsServerConfig", "unexpected JSON type")
 	}
 }
 

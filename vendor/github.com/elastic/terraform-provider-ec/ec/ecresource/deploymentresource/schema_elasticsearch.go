@@ -211,6 +211,53 @@ func elasticsearchTopologySchema() *schema.Schema {
 						},
 					},
 				},
+
+				// Read only config block that is present in the provider to
+				// avoid unsetting already set 'topology.elasticsearch' in the
+				// deployment plan.
+				"config": {
+					Type:        schema.TypeList,
+					Computed:    true,
+					Description: `Computed read-only configuration to avoid unsetting plan settings from 'topology.elasticsearch'`,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							// Settings
+
+							// plugins maps to the `enabled_built_in_plugins` API setting.
+							"plugins": {
+								Type:        schema.TypeSet,
+								Set:         schema.HashString,
+								Description: "List of Elasticsearch supported plugins, which vary from version to version. Check the Stack Pack version to see which plugins are supported for each version. This is currently only available from the UI and [ecctl](https://www.elastic.co/guide/en/ecctl/master/ecctl_stack_list.html)",
+								Computed:    true,
+								Elem: &schema.Schema{
+									Type: schema.TypeString,
+								},
+							},
+
+							// User settings
+							"user_settings_json": {
+								Type:        schema.TypeString,
+								Description: `JSON-formatted user level "elasticsearch.yml" setting overrides`,
+								Computed:    true,
+							},
+							"user_settings_override_json": {
+								Type:        schema.TypeString,
+								Description: `JSON-formatted admin (ECE) level "elasticsearch.yml" setting overrides`,
+								Computed:    true,
+							},
+							"user_settings_yaml": {
+								Type:        schema.TypeString,
+								Description: `YAML-formatted user level "elasticsearch.yml" setting overrides`,
+								Computed:    true,
+							},
+							"user_settings_override_yaml": {
+								Type:        schema.TypeString,
+								Description: `YAML-formatted admin (ECE) level "elasticsearch.yml" setting overrides`,
+								Computed:    true,
+							},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -227,6 +274,12 @@ func elasticsearchConfig() *schema.Schema {
 			Schema: map[string]*schema.Schema{
 				// Settings
 
+				"docker_image": {
+					Type:        schema.TypeString,
+					Description: "Optionally override the docker image the Elasticsearch nodes will use. Note that this field will only work for internal users only.",
+					Optional:    true,
+				},
+
 				// Ignored settings are: [ user_bundles and user_plugins ].
 				// Adding support for them will allow users to specify
 				// "Extensions" as it is possible in the UI today.
@@ -238,7 +291,6 @@ func elasticsearchConfig() *schema.Schema {
 					Set:         schema.HashString,
 					Description: "List of Elasticsearch supported plugins, which vary from version to version. Check the Stack Pack version to see which plugins are supported for each version. This is currently only available from the UI and [ecctl](https://www.elastic.co/guide/en/ecctl/master/ecctl_stack_list.html)",
 					Optional:    true,
-					MinItems:    1,
 					Elem: &schema.Schema{
 						MinItems: 1,
 						Type:     schema.TypeString,
@@ -273,9 +325,8 @@ func elasticsearchConfig() *schema.Schema {
 
 func elasticsearchRemoteCluster() *schema.Schema {
 	return &schema.Schema{
-		Type:        schema.TypeList,
+		Type:        schema.TypeSet,
 		Optional:    true,
-		MinItems:    1,
 		Description: "Optional Elasticsearch remote clusters to configure for the Elasticsearch resource, can be set multiple times",
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
@@ -289,7 +340,7 @@ func elasticsearchRemoteCluster() *schema.Schema {
 					Description:  "Alias for this Cross Cluster Search binding",
 					Type:         schema.TypeString,
 					ValidateFunc: validation.StringIsNotEmpty,
-					Optional:     true,
+					Required:     true,
 				},
 				"ref_id": {
 					Description: `Remote elasticsearch "ref_id", it is best left to the default value`,

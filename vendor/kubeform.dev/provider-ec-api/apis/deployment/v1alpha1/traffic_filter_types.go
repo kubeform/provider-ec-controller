@@ -42,14 +42,21 @@ type TrafficFilter struct {
 }
 
 type TrafficFilterSpecRule struct {
+	// Optional Azure endpoint GUID
+	// +optional
+	AzureEndpointGuid *string `json:"azureEndpointGuid,omitempty" tf:"azure_endpoint_guid"`
+	// Optional Azure endpoint name
+	// +optional
+	AzureEndpointName *string `json:"azureEndpointName,omitempty" tf:"azure_endpoint_name"`
 	// Optional rule description
 	// +optional
 	Description *string `json:"description,omitempty" tf:"description"`
 	// Computed rule ID
 	// +optional
 	ID *string `json:"ID,omitempty" tf:"id"`
-	// Required traffic filter source: IP address, CIDR mask, or VPC endpoint ID
-	Source *string `json:"source" tf:"source"`
+	// Required traffic filter source: IP address, CIDR mask, or VPC endpoint ID, not required when the type is azure_private_endpoint
+	// +optional
+	Source *string `json:"source,omitempty" tf:"source"`
 }
 
 type TrafficFilterSpec struct {
@@ -84,7 +91,7 @@ type TrafficFilterSpecResource struct {
 	// Required list of rules, which the ruleset is made of.
 	// +kubebuilder:validation:MinItems=1
 	Rule []TrafficFilterSpecRule `json:"rule" tf:"rule"`
-	// Required type of the ruleset ("ip" or "vpce")
+	// Required type of the ruleset ("ip", "vpce" or "azure_private_endpoint")
 	Type *string `json:"type" tf:"type"`
 }
 

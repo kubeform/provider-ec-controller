@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/blang/semver/v4"
 	"github.com/elastic/cloud-sdk-go/pkg/models"
 	"github.com/elastic/cloud-sdk-go/pkg/multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -58,7 +59,18 @@ func modelToState(d *schema.ResourceData, res *models.DeploymentGetResponse, rem
 			return err
 		}
 
-		if err := d.Set("version", getVersion(res.Resources)); err != nil {
+		// We're reconciling the version and storing the lowest version of any
+		// of the deployment resources. This ensures that if an upgrade fails,
+		// the state version will be lower than the desired version, making
+		// retries possible. Once more resource types are added, the function
+		// needs to be modified to check those as well.
+		version, err := getLowestVersion(res.Resources)
+		if err != nil {
+			// This code path is highly unlikely, but we're bubbling up the
+			// error in case one of the versions isn't parseable by semver.
+			return fmt.Errorf("failed reading deployment: %w", err)
+		}
+		if err := d.Set("version", version); err != nil {
 			return err
 		}
 
@@ -80,6 +92,13 @@ func modelToState(d *schema.ResourceData, res *models.DeploymentGetResponse, rem
 		apmFlattened := flattenApmResources(res.Resources.Apm, *res.Name)
 		if len(apmFlattened) > 0 {
 			if err := d.Set("apm", apmFlattened); err != nil {
+				return err
+			}
+		}
+
+		integrationsServerFlattened := flattenIntegrationsServerResources(res.Resources.IntegrationsServer, *res.Name)
+		if len(integrationsServerFlattened) > 0 {
+			if err := d.Set("integrations_server", integrationsServerFlattened); err != nil {
 				return err
 			}
 		}
@@ -185,14 +204,74 @@ func getRegion(res *models.DeploymentResources) (region string) {
 	return region
 }
 
-func getVersion(res *models.DeploymentResources) (version string) {
+func getLowestVersion(res *models.DeploymentResources) (string, error) {
+	// We're starting off with a very high version so it can be replaced.
+	replaceVersion := `99.99.99`
+	version := semver.MustParse(replaceVersion)
 	for _, r := range res.Elasticsearch {
 		if !util.IsCurrentEsPlanEmpty(r) {
-			return r.Info.PlanInfo.Current.Plan.Elasticsearch.Version
+			v := r.Info.PlanInfo.Current.Plan.Elasticsearch.Version
+			if err := swapLowerVersion(&version, v); err != nil && !isEsResourceStopped(r) {
+				return "", fmt.Errorf("elasticsearch version '%s' is not semver compliant: %w", v, err)
+			}
 		}
 	}
 
-	return version
+	for _, r := range res.Kibana {
+		if !util.IsCurrentKibanaPlanEmpty(r) {
+			v := r.Info.PlanInfo.Current.Plan.Kibana.Version
+			if err := swapLowerVersion(&version, v); err != nil && !isKibanaResourceStopped(r) {
+				return version.String(), fmt.Errorf("kibana version '%s' is not semver compliant: %w", v, err)
+			}
+		}
+	}
+
+	for _, r := range res.Apm {
+		if !util.IsCurrentApmPlanEmpty(r) {
+			v := r.Info.PlanInfo.Current.Plan.Apm.Version
+			if err := swapLowerVersion(&version, v); err != nil && !isApmResourceStopped(r) {
+				return version.String(), fmt.Errorf("apm version '%s' is not semver compliant: %w", v, err)
+			}
+		}
+	}
+
+	for _, r := range res.IntegrationsServer {
+		if !util.IsCurrentIntegrationsServerPlanEmpty(r) {
+			v := r.Info.PlanInfo.Current.Plan.IntegrationsServer.Version
+			if err := swapLowerVersion(&version, v); err != nil && !isIntegrationsServerResourceStopped(r) {
+				return version.String(), fmt.Errorf("integrations_server version '%s' is not semver compliant: %w", v, err)
+			}
+		}
+	}
+
+	for _, r := range res.EnterpriseSearch {
+		if !util.IsCurrentEssPlanEmpty(r) {
+			v := r.Info.PlanInfo.Current.Plan.EnterpriseSearch.Version
+			if err := swapLowerVersion(&version, v); err != nil && !isEssResourceStopped(r) {
+				return version.String(), fmt.Errorf("enterprise search version '%s' is not semver compliant: %w", v, err)
+			}
+		}
+	}
+
+	if version.String() != replaceVersion {
+		return version.String(), nil
+	}
+	return "", errors.New("Unable to determine the lowest version for any the deployment components")
+}
+
+func swapLowerVersion(version *semver.Version, comp string) error {
+	if comp == "" {
+		return nil
+	}
+
+	v, err := semver.Parse(comp)
+	if err != nil {
+		return err
+	}
+	if v.LT(*version) {
+		*version = v
+	}
+	return nil
 }
 
 func hasRunningResources(res *models.DeploymentGetResponse) bool {
@@ -215,6 +294,11 @@ func hasRunningResources(res *models.DeploymentGetResponse) bool {
 		}
 		for _, r := range res.Resources.EnterpriseSearch {
 			if !isEssResourceStopped(r) {
+				hasRunning = true
+			}
+		}
+		for _, r := range res.Resources.IntegrationsServer {
+			if !isIntegrationsServerResourceStopped(r) {
 				hasRunning = true
 			}
 		}
