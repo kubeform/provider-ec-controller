@@ -42,6 +42,14 @@ var allJsonIt = map[schema.GroupVersionResource]Data{
 	{
 		Group:    "deployment.ec.kubeform.com",
 		Version:  "v1alpha1",
+		Resource: "elasticsearchkeystores",
+	}: {
+		JsonIt:       controllers.GetJSONItr(deploymentv1alpha1.GetEncoder(), deploymentv1alpha1.GetDecoder()),
+		ResourceType: "ec_deployment_elasticsearch_keystore",
+	},
+	{
+		Group:    "deployment.ec.kubeform.com",
+		Version:  "v1alpha1",
 		Resource: "extensions",
 	}: {
 		JsonIt:       controllers.GetJSONItr(deploymentv1alpha1.GetEncoder(), deploymentv1alpha1.GetDecoder()),
