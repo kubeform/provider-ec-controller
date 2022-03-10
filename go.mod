@@ -94,4 +94,4 @@ replace k8s.io/utils => k8s.io/utils v0.0.0-20201110183641-67b214c5f920
 
 replace sigs.k8s.io/application => github.com/kmodules/application v0.8.4-0.20210427030912-90eeee3bc4ad
 
-replace rgithub.com/spf13/afero => github.com/spf13/afero v1.2.2
+replace github.com/spf13/afero => github.com/spf13/afero v1.2.2
