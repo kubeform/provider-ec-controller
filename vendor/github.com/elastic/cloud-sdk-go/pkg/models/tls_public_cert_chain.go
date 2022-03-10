@@ -36,9 +36,15 @@ import (
 // swagger:model TlsPublicCertChain
 type TLSPublicCertChain struct {
 
+	// Whether or not this certificate can be updated using the API
+	APIManaged *bool `json:"api_managed,omitempty"`
+
 	// The list of PEM encoded X509 certificates that make up the certificate chain
 	// Required: true
 	Chain []string `json:"chain"`
+
+	// Details on the validity and lifetime of the certification chain
+	ChainStatus *ChainStatus `json:"chain_status,omitempty"`
 
 	// Was this certificate chain user supplied or automatically generated?
 	// Required: true
@@ -50,6 +56,10 @@ func (m *TLSPublicCertChain) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateChain(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateChainStatus(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -72,6 +82,23 @@ func (m *TLSPublicCertChain) validateChain(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *TLSPublicCertChain) validateChainStatus(formats strfmt.Registry) error {
+	if swag.IsZero(m.ChainStatus) { // not required
+		return nil
+	}
+
+	if m.ChainStatus != nil {
+		if err := m.ChainStatus.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("chain_status")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *TLSPublicCertChain) validateUserSupplied(formats strfmt.Registry) error {
 
 	if err := validate.Required("user_supplied", "body", m.UserSupplied); err != nil {
@@ -81,8 +108,31 @@ func (m *TLSPublicCertChain) validateUserSupplied(formats strfmt.Registry) error
 	return nil
 }
 
-// ContextValidate validates this Tls public cert chain based on context it is used
+// ContextValidate validate this Tls public cert chain based on the context it is used
 func (m *TLSPublicCertChain) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateChainStatus(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *TLSPublicCertChain) contextValidateChainStatus(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.ChainStatus != nil {
+		if err := m.ChainStatus.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("chain_status")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

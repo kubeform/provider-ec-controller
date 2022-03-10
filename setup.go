@@ -247,6 +247,23 @@ func SetupManager(ctx context.Context, mgr manager.Manager, gvk schema.GroupVers
 	case schema.GroupVersionKind{
 		Group:   "deployment.ec.kubeform.com",
 		Version: "v1alpha1",
+		Kind:    "ElasticsearchKeystore",
+	}:
+		if err := (&controllersdeployment.ElasticsearchKeystoreReconciler{
+			Client:   mgr.GetClient(),
+			Log:      ctrl.Log.WithName("controllers").WithName("ElasticsearchKeystore"),
+			Scheme:   mgr.GetScheme(),
+			Gvk:      gvk,
+			Provider: _provider,
+			Resource: _provider.ResourcesMap["ec_deployment_elasticsearch_keystore"],
+			TypeName: "ec_deployment_elasticsearch_keystore",
+		}).SetupWithManager(ctx, mgr, auditor, restrictToNamespace); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "ElasticsearchKeystore")
+			return err
+		}
+	case schema.GroupVersionKind{
+		Group:   "deployment.ec.kubeform.com",
+		Version: "v1alpha1",
 		Kind:    "Extension",
 	}:
 		if err := (&controllersdeployment.ExtensionReconciler{
@@ -312,6 +329,15 @@ func SetupWebhook(mgr manager.Manager, gvk schema.GroupVersionKind) error {
 	}:
 		if err := (&deploymentv1alpha1.Deployment{}).SetupWebhookWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create webhook", "webhook", "Deployment")
+			return err
+		}
+	case schema.GroupVersionKind{
+		Group:   "deployment.ec.kubeform.com",
+		Version: "v1alpha1",
+		Kind:    "ElasticsearchKeystore",
+	}:
+		if err := (&deploymentv1alpha1.ElasticsearchKeystore{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "ElasticsearchKeystore")
 			return err
 		}
 	case schema.GroupVersionKind{

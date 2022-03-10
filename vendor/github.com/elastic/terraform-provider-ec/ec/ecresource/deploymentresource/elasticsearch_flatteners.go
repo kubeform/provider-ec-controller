@@ -73,12 +73,10 @@ func flattenEsResources(in []*models.ElasticsearchResourceInfo, name string, rem
 			m[k] = v
 		}
 
-		if c := flattenEsConfig(plan.Elasticsearch); len(c) > 0 {
-			m["config"] = c
-		}
+		m["config"] = flattenEsConfig(plan.Elasticsearch)
 
-		if r := flattenEsRemotes(remotes); len(r) > 0 {
-			m["remote_cluster"] = r
+		if remotes := flattenEsRemotes(remotes); remotes.Len() > 0 {
+			m["remote_cluster"] = remotes
 		}
 
 		extensions := schema.NewSet(esExtensionHash, nil)
@@ -187,6 +185,9 @@ func flattenEsTopology(plan *models.ElasticsearchClusterPlan) ([]interface{}, er
 			m["autoscaling"] = []interface{}{autoscaling}
 		}
 
+		// Computed config object to avoid unsetting legacy topology config settings.
+		m["config"] = flattenEsConfig(topology.Elasticsearch)
+
 		result = append(result, m)
 	}
 
@@ -231,6 +232,12 @@ func flattenEsConfig(cfg *models.ElasticsearchConfiguration) []interface{} {
 		}
 	}
 
+	if cfg.DockerImage != "" {
+		m["docker_image"] = cfg.DockerImage
+	}
+
+	// If no settings are set, there's no need to store the empty values in the
+	// state and makes the state consistent with a clean import return.
 	if len(m) == 0 {
 		return nil
 	}
@@ -238,8 +245,8 @@ func flattenEsConfig(cfg *models.ElasticsearchConfiguration) []interface{} {
 	return []interface{}{m}
 }
 
-func flattenEsRemotes(in models.RemoteResources) []interface{} {
-	var res []interface{}
+func flattenEsRemotes(in models.RemoteResources) *schema.Set {
+	res := newElasticsearchRemoteSet()
 	for _, r := range in.Resources {
 		var m = make(map[string]interface{})
 		if r.DeploymentID != nil && *r.DeploymentID != "" {
@@ -257,10 +264,17 @@ func flattenEsRemotes(in models.RemoteResources) []interface{} {
 		if r.SkipUnavailable != nil {
 			m["skip_unavailable"] = *r.SkipUnavailable
 		}
-		res = append(res, m)
+		res.Add(m)
 	}
 
 	return res
+}
+
+func newElasticsearchRemoteSet(remotes ...interface{}) *schema.Set {
+	return schema.NewSet(
+		schema.HashResource(elasticsearchRemoteCluster().Elem.(*schema.Resource)),
+		remotes,
+	)
 }
 
 func flattenEsBundles(in []*models.ElasticsearchUserBundle) []interface{} {

@@ -45,6 +45,9 @@ type DeploymentSpecApmConfig struct {
 	// Optionally enable debug mode for APM servers - defaults to false
 	// +optional
 	DebugEnabled *bool `json:"debugEnabled,omitempty" tf:"debug_enabled"`
+	// Optionally override the docker image the APM nodes will use. Note that this field will only work for internal users only.
+	// +optional
+	DockerImage *string `json:"dockerImage,omitempty" tf:"docker_image"`
 	// An arbitrary JSON object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_yaml' is allowed), provided they are on the whitelist ('user_settings_whitelist') and not on the blacklist ('user_settings_blacklist'). (This field together with 'user_settings_override*' and 'system_settings' defines the total set of resource settings)
 	// +optional
 	UserSettingsJSON *string `json:"userSettingsJSON,omitempty" tf:"user_settings_json"`
@@ -92,9 +95,11 @@ type DeploymentSpecApm struct {
 }
 
 type DeploymentSpecElasticsearchConfig struct {
+	// Optionally override the docker image the Elasticsearch nodes will use. Note that this field will only work for internal users only.
+	// +optional
+	DockerImage *string `json:"dockerImage,omitempty" tf:"docker_image"`
 	// List of Elasticsearch supported plugins, which vary from version to version. Check the Stack Pack version to see which plugins are supported for each version. This is currently only available from the UI and [ecctl](https://www.elastic.co/guide/en/ecctl/master/ecctl_stack_list.html)
 	// +optional
-	// +kubebuilder:validation:MinItems=1
 	Plugins []string `json:"plugins,omitempty" tf:"plugins"`
 	// JSON-formatted user level "elasticsearch.yml" setting overrides
 	// +optional
@@ -123,8 +128,7 @@ type DeploymentSpecElasticsearchExtension struct {
 
 type DeploymentSpecElasticsearchRemoteCluster struct {
 	// Alias for this Cross Cluster Search binding
-	// +optional
-	Alias *string `json:"alias,omitempty" tf:"alias"`
+	Alias *string `json:"alias" tf:"alias"`
 	// Remote deployment ID
 	DeploymentID *string `json:"deploymentID" tf:"deployment_id"`
 	// Remote elasticsearch "ref_id", it is best left to the default value
@@ -161,10 +165,31 @@ type DeploymentSpecElasticsearchTopologyAutoscaling struct {
 	PolicyOverrideJSON *string `json:"policyOverrideJSON,omitempty" tf:"policy_override_json"`
 }
 
+type DeploymentSpecElasticsearchTopologyConfig struct {
+	// List of Elasticsearch supported plugins, which vary from version to version. Check the Stack Pack version to see which plugins are supported for each version. This is currently only available from the UI and [ecctl](https://www.elastic.co/guide/en/ecctl/master/ecctl_stack_list.html)
+	// +optional
+	Plugins []string `json:"plugins,omitempty" tf:"plugins"`
+	// JSON-formatted user level "elasticsearch.yml" setting overrides
+	// +optional
+	UserSettingsJSON *string `json:"userSettingsJSON,omitempty" tf:"user_settings_json"`
+	// JSON-formatted admin (ECE) level "elasticsearch.yml" setting overrides
+	// +optional
+	UserSettingsOverrideJSON *string `json:"userSettingsOverrideJSON,omitempty" tf:"user_settings_override_json"`
+	// YAML-formatted admin (ECE) level "elasticsearch.yml" setting overrides
+	// +optional
+	UserSettingsOverrideYaml *string `json:"userSettingsOverrideYaml,omitempty" tf:"user_settings_override_yaml"`
+	// YAML-formatted user level "elasticsearch.yml" setting overrides
+	// +optional
+	UserSettingsYaml *string `json:"userSettingsYaml,omitempty" tf:"user_settings_yaml"`
+}
+
 type DeploymentSpecElasticsearchTopology struct {
 	// Optional Elasticsearch autoscaling settings, such a maximum and minimum size and resources.
 	// +optional
 	Autoscaling *DeploymentSpecElasticsearchTopologyAutoscaling `json:"autoscaling,omitempty" tf:"autoscaling"`
+	// Computed read-only configuration to avoid unsetting plan settings from 'topology.elasticsearch'
+	// +optional
+	Config []DeploymentSpecElasticsearchTopologyConfig `json:"config,omitempty" tf:"config"`
 	// Required topology ID from the deployment template
 	ID *string `json:"ID" tf:"id"`
 	// Computed Instance Configuration ID of the topology element
@@ -244,7 +269,6 @@ type DeploymentSpecElasticsearch struct {
 	Region *string `json:"region,omitempty" tf:"region"`
 	// Optional Elasticsearch remote clusters to configure for the Elasticsearch resource, can be set multiple times
 	// +optional
-	// +kubebuilder:validation:MinItems=1
 	RemoteCluster []DeploymentSpecElasticsearchRemoteCluster `json:"remoteCluster,omitempty" tf:"remote_cluster"`
 	// The Elasticsearch resource unique identifier
 	// +optional
@@ -265,6 +289,9 @@ type DeploymentSpecElasticsearch struct {
 }
 
 type DeploymentSpecEnterpriseSearchConfig struct {
+	// Optionally override the docker image the Enterprise Search nodes will use. Note that this field will only work for internal users only.
+	// +optional
+	DockerImage *string `json:"dockerImage,omitempty" tf:"docker_image"`
 	// An arbitrary JSON object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_yaml' is allowed), provided they are on the whitelist ('user_settings_whitelist') and not on the blacklist ('user_settings_blacklist'). (This field together with 'user_settings_override*' and 'system_settings' defines the total set of resource settings)
 	// +optional
 	UserSettingsJSON *string `json:"userSettingsJSON,omitempty" tf:"user_settings_json"`
@@ -317,7 +344,63 @@ type DeploymentSpecEnterpriseSearch struct {
 	Topology []DeploymentSpecEnterpriseSearchTopology `json:"topology,omitempty" tf:"topology"`
 }
 
+type DeploymentSpecIntegrationsServerConfig struct {
+	// Optionally enable debug mode for IntegrationsServer servers - defaults to false
+	// +optional
+	DebugEnabled *bool `json:"debugEnabled,omitempty" tf:"debug_enabled"`
+	// Optionally override the docker image the IntegrationsServer nodes will use. Note that this field will only work for internal users only.
+	// +optional
+	DockerImage *string `json:"dockerImage,omitempty" tf:"docker_image"`
+	// An arbitrary JSON object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_yaml' is allowed), provided they are on the whitelist ('user_settings_whitelist') and not on the blacklist ('user_settings_blacklist'). (This field together with 'user_settings_override*' and 'system_settings' defines the total set of resource settings)
+	// +optional
+	UserSettingsJSON *string `json:"userSettingsJSON,omitempty" tf:"user_settings_json"`
+	// An arbitrary JSON object allowing ECE admins owners to set clusters' parameters (only one of this and 'user_settings_override_yaml' is allowed), ie in addition to the documented 'system_settings'. (This field together with 'system_settings' and 'user_settings*' defines the total set of resource settings)
+	// +optional
+	UserSettingsOverrideJSON *string `json:"userSettingsOverrideJSON,omitempty" tf:"user_settings_override_json"`
+	// An arbitrary YAML object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_json' is allowed), provided they are on the whitelist ('user_settings_whitelist') and not on the blacklist ('user_settings_blacklist'). (These field together with 'user_settings_override*' and 'system_settings' defines the total set of resource settings)
+	// +optional
+	UserSettingsOverrideYaml *string `json:"userSettingsOverrideYaml,omitempty" tf:"user_settings_override_yaml"`
+	// An arbitrary YAML object allowing ECE admins owners to set clusters' parameters (only one of this and 'user_settings_override_json' is allowed), ie in addition to the documented 'system_settings'. (This field together with 'system_settings' and 'user_settings*' defines the total set of resource settings)
+	// +optional
+	UserSettingsYaml *string `json:"userSettingsYaml,omitempty" tf:"user_settings_yaml"`
+}
+
+type DeploymentSpecIntegrationsServerTopology struct {
+	// +optional
+	InstanceConfigurationID *string `json:"instanceConfigurationID,omitempty" tf:"instance_configuration_id"`
+	// +optional
+	Size *string `json:"size,omitempty" tf:"size"`
+	// Optional size type, defaults to "memory".
+	// +optional
+	SizeResource *string `json:"sizeResource,omitempty" tf:"size_resource"`
+	// +optional
+	ZoneCount *int64 `json:"zoneCount,omitempty" tf:"zone_count"`
+}
+
+type DeploymentSpecIntegrationsServer struct {
+	// Optionally define the IntegrationsServer configuration options for the IntegrationsServer Server
+	// +optional
+	Config *DeploymentSpecIntegrationsServerConfig `json:"config,omitempty" tf:"config"`
+	// +optional
+	ElasticsearchClusterRefID *string `json:"elasticsearchClusterRefID,omitempty" tf:"elasticsearch_cluster_ref_id"`
+	// +optional
+	HttpEndpoint *string `json:"httpEndpoint,omitempty" tf:"http_endpoint"`
+	// +optional
+	HttpsEndpoint *string `json:"httpsEndpoint,omitempty" tf:"https_endpoint"`
+	// +optional
+	RefID *string `json:"refID,omitempty" tf:"ref_id"`
+	// +optional
+	Region *string `json:"region,omitempty" tf:"region"`
+	// +optional
+	ResourceID *string `json:"resourceID,omitempty" tf:"resource_id"`
+	// +optional
+	Topology []DeploymentSpecIntegrationsServerTopology `json:"topology,omitempty" tf:"topology"`
+}
+
 type DeploymentSpecKibanaConfig struct {
+	// Optionally override the docker image the Kibana nodes will use. Note that this field will only work for internal users only.
+	// +optional
+	DockerImage *string `json:"dockerImage,omitempty" tf:"docker_image"`
 	// An arbitrary JSON object allowing (non-admin) cluster owners to set their parameters (only one of this and 'user_settings_yaml' is allowed), provided they are on the whitelist ('user_settings_whitelist') and not on the blacklist ('user_settings_blacklist'). (This field together with 'user_settings_override*' and 'system_settings' defines the total set of resource settings)
 	// +optional
 	UserSettingsJSON *string `json:"userSettingsJSON,omitempty" tf:"user_settings_json"`
@@ -416,6 +499,9 @@ type DeploymentSpecResource struct {
 	// Optional Enterprise Search resource definition
 	// +optional
 	EnterpriseSearch *DeploymentSpecEnterpriseSearch `json:"enterpriseSearch,omitempty" tf:"enterprise_search"`
+	// Optional Integrations Server resource definition
+	// +optional
+	IntegrationsServer *DeploymentSpecIntegrationsServer `json:"integrationsServer,omitempty" tf:"integrations_server"`
 	// Optional Kibana resource definition
 	// +optional
 	Kibana *DeploymentSpecKibana `json:"kibana,omitempty" tf:"kibana"`

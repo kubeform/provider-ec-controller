@@ -89,7 +89,7 @@ func (r *TrafficFilterAssociation) ValidateUpdate(old runtime.Object) error {
 		return err
 	}
 
-	for key := range trafficfilterassociationForceNewList {
+	for key, _ := range trafficfilterassociationForceNewList {
 		keySplit := strings.Split(key, "/*")
 		length := len(keySplit)
 		checkIfAnyDif := false

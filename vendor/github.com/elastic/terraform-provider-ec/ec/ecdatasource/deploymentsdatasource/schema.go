@@ -76,6 +76,12 @@ func newSchema() map[string]*schema.Schema {
 			MaxItems: 1,
 			Elem:     newResourceFilters(),
 		},
+		"integrations_server": {
+			Type:     schema.TypeList,
+			Optional: true,
+			MaxItems: 1,
+			Elem:     newResourceFilters(),
+		},
 		"enterprise_search": {
 			Type:     schema.TypeList,
 			Optional: true,
@@ -92,7 +98,19 @@ func newDeploymentList() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"name": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"alias": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"elasticsearch_resource_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"elasticsearch_ref_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -100,11 +118,31 @@ func newDeploymentList() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"kibana_ref_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"apm_resource_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"apm_ref_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"integrations_server_resource_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"integrations_server_ref_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"enterprise_search_resource_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"enterprise_search_ref_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
